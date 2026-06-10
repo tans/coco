@@ -1,0 +1,8 @@
+fn add a b
+  return a + b
+
+async fn loadUser id
+  user = await fetchUser id
+  return user
+
+double = (x) => x * 2

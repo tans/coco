@@ -1,0 +1,15 @@
+age = 20
+active = true
+
+if age >= 18 and active
+  print "adult"
+elif age >= 13
+  print "teen"
+else
+  print "child"
+
+for name in users
+  print "user {name}"
+
+while active
+  break

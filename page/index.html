@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Coco Language</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2318201d'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial, sans-serif' font-size='22' font-weight='700' fill='white'%3ECo%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Coco home">
+        <span class="brand-mark">Co</span>
+        <span>Coco</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#lexer">Lexer</a>
+        <a href="#runtime">Runtime</a>
+        <a href="#examples">Examples</a>
+        <a href="#docs">Docs</a>
+        <a href="#roadmap">Roadmap</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <h1>Coco language tooling for Bun</h1>
+          <p>
+            A compact indentation-based language prototype with a tested Lexer
+            1.0, REPL, CLI, examples, and implementation docs.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button primary" href="../docs/tutorial.md">Read tutorial</a>
+            <a class="button secondary" href="../docs/tutorial.md">Try the REPL</a>
+          </div>
+        </div>
+        <div class="code-panel" aria-label="Coco example">
+          <div class="panel-title">examples/hello.coco</div>
+          <pre><code>const version = "0.1"
+
+fn greet name
+  print "Hello {name}"
+
+if version == "0.1"
+  greet "Coco"</code></pre>
+        </div>
+      </section>
+
+      <section id="lexer" class="section split">
+        <div>
+          <h2>Lexer 1.0</h2>
+          <p>
+            The implemented compiler stage converts `.coco` source into a JSON
+            token stream with layout tokens and source locations.
+          </p>
+          <ul class="feature-list">
+            <li>Keywords, identifiers, literals, operators, and punctuation</li>
+            <li>Python-style `INDENT` and `DEDENT` block layout</li>
+            <li>Single-line and multi-line comments ignored by design</li>
+            <li>String template detection for parser-time interpolation</li>
+          </ul>
+        </div>
+        <div class="token-grid" aria-label="Token groups">
+          <button data-token="layout" class="token-card selected">Layout</button>
+          <button data-token="literal" class="token-card">Literals</button>
+          <button data-token="operator" class="token-card">Operators</button>
+          <button data-token="keyword" class="token-card">Keywords</button>
+        </div>
+      </section>
+
+      <section class="section demo" aria-labelledby="demo-title">
+        <div>
+          <h2 id="demo-title">Token preview</h2>
+          <p>
+            This page includes a small static preview to document the expected
+            shape of the token stream.
+          </p>
+        </div>
+        <div class="preview">
+          <pre id="token-preview" aria-live="polite"></pre>
+        </div>
+      </section>
+
+      <section id="runtime" class="section split">
+        <div>
+          <h2>Optional runtime</h2>
+          <p>
+            Coco Runtime is separated from the language core. It currently
+            provides manifest planning, event routing, scheduling, and plugin
+            boundaries without forcing heavy adapters into the compiler.
+          </p>
+        </div>
+        <div class="code-panel" aria-label="Runtime command example">
+          <div class="panel-title">runtime plan</div>
+          <pre><code>coco runtime plan examples/runtime/agent-web.json
+coco runtime dev examples/runtime/agent-web.json --dry-run</code></pre>
+        </div>
+      </section>
+
+      <section id="examples" class="section">
+        <h2>Examples</h2>
+        <div class="example-list">
+          <a href="../examples/hello.coco">hello.coco</a>
+          <a href="../examples/control-flow.coco">control-flow.coco</a>
+          <a href="../examples/collections.coco">collections.coco</a>
+          <a href="../examples/functions.coco">functions.coco</a>
+          <a href="../examples/modules-and-class.coco">modules-and-class.coco</a>
+          <a href="../examples/diagnostics-bad-indent.coco">diagnostics-bad-indent.coco</a>
+        </div>
+      </section>
+
+      <section id="docs" class="section docs-band">
+        <h2>Documentation</h2>
+        <div class="doc-links">
+          <a href="../docs/architecture.md">Architecture</a>
+          <a href="../docs/lexer.md">Lexer reference</a>
+          <a href="../docs/tutorial.md">Tutorial</a>
+          <a href="../docs/runtime.md">Runtime</a>
+          <a href="../docs/examples.md">Examples guide</a>
+          <a href="../docs/diagnostics.md">Diagnostics</a>
+          <a href="../docs/testing.md">Testing</a>
+          <a href="../docs/design-influences.md">Design influences</a>
+          <a href="../llms.txt">llms.txt</a>
+          <a href="../Agent.md">Agent guide</a>
+        </div>
+      </section>
+
+      <section id="roadmap" class="section roadmap">
+        <h2>Roadmap</h2>
+        <ol>
+          <li>Parser for expressions and statements</li>
+          <li>Babel-like Coco AST fixtures</li>
+          <li>Transform stage to JavaScript AST</li>
+          <li>ES2023 emitter and `cococ compile`</li>
+        </ol>
+      </section>
+    </main>
+
+    <footer>
+      <span>Coco Lexer 1.0</span>
+      <span>Bun + TypeScript</span>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

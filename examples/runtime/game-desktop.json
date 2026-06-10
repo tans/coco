@@ -1,0 +1,36 @@
+{
+  "name": "game-desktop-demo",
+  "target": "desktop",
+  "engines": {
+    "desktop": {
+      "enabled": true,
+      "adapter": "tauri"
+    },
+    "game": {
+      "enabled": true,
+      "adapter": "pixijs"
+    },
+    "ui": true
+  },
+  "plugins": [
+    {
+      "name": "pixijs",
+      "engines": ["game"],
+      "capabilities": ["sprite-system", "canvas-renderer"]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "game.loop",
+      "kind": "game-loop",
+      "event": "game.tick",
+      "engine": "game"
+    },
+    {
+      "id": "ui.render",
+      "kind": "ui",
+      "event": "ui.render",
+      "engine": "ui"
+    }
+  ]
+}

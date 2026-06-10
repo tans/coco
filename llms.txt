@@ -1,0 +1,85 @@
+# Coco
+
+> Coco is a Bun-native language prototype that uses indentation-based syntax
+> and compiles toward modern JavaScript. Current implementation status:
+> Lexer 1.0 is implemented; parser, AST transform, and emitter are planned.
+
+## Canonical Links
+
+- README: `README.md`
+- Current target/spec draft: `target.md`
+- Language specification draft: `lang-spec.md`
+- Architecture: `docs/architecture.md`
+- Lexer reference: `docs/lexer.md`
+- Tutorial: `docs/tutorial.md`
+- Examples guide: `docs/examples.md`
+- Diagnostics: `docs/diagnostics.md`
+- Testing guide: `docs/testing.md`
+- Roadmap: `docs/roadmap.md`
+- Design influences: `docs/design-influences.md`
+- Agent guide: `Agent.md`
+- Static page: `page/index.html`
+
+## What Exists
+
+- Bun + TypeScript project scaffold
+- Public API: `tokenize(source)` from `src/index.ts`
+- CLI: `bun run src/cli.ts lex <file.coco>`
+- REPL: `coco` or `bun run src/cli.ts`
+- Runtime guide: `docs/runtime.md`
+- Lexer implementation: `src/lexer.ts`
+- Token model and diagnostics: `src/token.ts`
+- Tests: `tests/lexer.test.ts`
+- Runtime tests: `tests/runtime.test.ts`, `tests/runtime-cli.test.ts`
+- Example `.coco` files in `examples/`
+- Runtime manifest examples in `examples/runtime/`
+
+## What Does Not Exist Yet
+
+- Parser
+- Coco AST builder
+- JavaScript AST transform
+- ES2023 emitter
+- Type checker
+- Source maps
+- Package publishing setup
+- Real runtime adapters for HTTP, LLM providers, queues, DBs, desktop, or game rendering
+
+Do not describe Coco as a complete compiler until those stages exist in code,
+tests, and docs.
+
+## Design Summary
+
+Coco aims to combine:
+
+- Python-style indentation for blocks
+- Ruby-like readable scripting ergonomics
+- CoffeeScript-like concision without inheriting historical ambiguity
+- Go-like small tooling surface and fast feedback
+- TypeScript/Babel-compatible AST direction
+- Bun-native ESM workflows
+- AI-friendly syntax, diagnostics, examples, and project metadata
+
+## AI Guidance
+
+When generating or editing Coco code:
+
+- Prefer explicit syntax over hidden magic.
+- Keep examples small, parseable, and indentation-stable.
+- Preserve source-location quality in compiler code.
+- Do not invent implemented features beyond Lexer 1.0.
+- Add tests before claiming a syntax rule is supported.
+- Update docs and examples with user-facing syntax changes.
+
+## Core Commands
+
+```bash
+bun install
+bun run install:global
+bun test
+bun run check
+bun run build
+bun run src/cli.ts
+bun run src/cli.ts lex examples/hello.coco
+bun run src/cli.ts runtime plan examples/runtime/agent-web.json
+```

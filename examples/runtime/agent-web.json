@@ -1,0 +1,52 @@
+{
+  "name": "agent-web-demo",
+  "target": "bun",
+  "engines": {
+    "web": {
+      "enabled": true,
+      "adapter": "bun-http"
+    },
+    "api": true,
+    "agent": {
+      "enabled": true,
+      "adapter": "openai"
+    },
+    "workflow": true,
+    "queue": true
+  },
+  "plugins": [
+    {
+      "name": "openai",
+      "engines": ["agent"],
+      "adapters": {
+        "agent": "openai"
+      },
+      "capabilities": ["function-calling", "tool-registry"]
+    },
+    {
+      "name": "redis",
+      "engines": ["queue"],
+      "capabilities": ["queue-adapter", "kv-memory"]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "http.request",
+      "kind": "io",
+      "event": "http.request",
+      "engine": "web"
+    },
+    {
+      "id": "agent.respond",
+      "kind": "ai",
+      "event": "agent.task",
+      "engine": "agent"
+    },
+    {
+      "id": "workflow.order",
+      "kind": "background",
+      "event": "workflow.order.created",
+      "engine": "workflow"
+    }
+  ]
+}

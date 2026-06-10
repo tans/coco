@@ -1,0 +1,9 @@
+const version = "0.1"
+
+fn greet name
+  print "Hello {name}"
+
+if version == "0.1"
+  greet "Coco"
+else
+  print "Unknown version"

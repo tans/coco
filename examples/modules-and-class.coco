@@ -1,0 +1,8 @@
+import defaultClient from "client"
+import { request } from "http"
+
+export class UserService
+  fn find id
+    return request "/users/{id}"
+
+export default UserService

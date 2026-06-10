@@ -1,0 +1,13 @@
+users = [
+  "Tom"
+  "Jerry"
+  "Lucy"
+]
+
+profile =
+  name: "Tom"
+  age: 18
+  contact:
+    email: "tom@example.com"
+
+avatar = profile?.contact?.avatar
