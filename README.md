@@ -16,6 +16,76 @@ JS AST
 ES2023
 ```
 
+## Syntax Overview
+
+Coco syntax is designed to be compact, readable, and friendly to both humans
+and tools. It learns from Python indentation, Ruby scripting ergonomics,
+CoffeeScript concision, Go's small surface area, and TypeScript/Babel-style AST
+compatibility without copying any one language wholesale.
+
+```coco
+const version = "0.1"
+
+fn greet name
+  print "Hello {name}"
+
+if version == "0.1"
+  greet "Coco"
+else
+  print "Unknown version"
+```
+
+Current language milestone:
+
+- Indentation defines blocks through explicit `INDENT` and `DEDENT` tokens.
+- No semicolons are required.
+- Identifiers, keywords, strings, string templates, numbers, comments,
+  operators, and punctuation are tokenized.
+- `true`, `false`, and `null` are literal tokens.
+- `and`, `or`, and `not` are word operators; symbolic forms are also accepted.
+- Parser, AST, transform, and emitter are planned next stages.
+
+The implemented compiler surface is intentionally honest: Coco currently has a
+tested lexer and REPL tokenization environment, not a complete compiler yet.
+
+## Runtime Overview
+
+Coco Runtime is an optional layer for application orchestration. It is separated
+from the language core so users can install only the language tools, or opt into
+runtime support when they want Web/API/Agent/Workflow/Desktop/Game planning.
+
+```text
+Language core:
+  tokenize(source)
+  lexer tokens
+  future parser / AST / emitter
+
+Optional runtime:
+  manifest parser
+  engine descriptors
+  event bus
+  scheduler
+  plugin registry
+```
+
+Runtime 1.0 is manifest-driven because the Coco parser is not implemented yet.
+Future `.coco` runtime syntax should compile into the same manifest model.
+
+```bash
+coco runtime plan examples/runtime/agent-web.json
+coco runtime dev examples/runtime/agent-web.json --dry-run
+```
+
+The package boundary is explicit:
+
+```ts
+import { tokenize } from "coco-lang";
+import { CocoRuntime } from "coco-lang/runtime";
+```
+
+Real adapters such as OpenAI, Redis, PixiJS, Tauri, HTTP servers, and database
+drivers are future optional plugins rather than language-core dependencies.
+
 ## Status
 
 Implemented:
@@ -141,10 +211,13 @@ src/
   cli.ts          CLI entry point
   index.ts        Public API exports
   lexer.ts        Coco Lexer 1.0 implementation
+  runtime/        Optional runtime base
   token.ts        Token types, keyword table, syntax error
 
 tests/
+  cli.test.ts     CLI and REPL tests
   lexer.test.ts   Lexer behavior tests
+  runtime*.test.ts Runtime API and CLI tests
 
 docs/
   architecture.md Compiler pipeline and module boundaries
