@@ -16,7 +16,8 @@ ES2023
 
 ## Current Milestone
 
-The repository currently implements the first stage, **Lexer 1.0**.
+The repository currently implements a working MVP pipeline through JavaScript
+emit.
 
 The lexer is responsible for:
 
@@ -26,13 +27,29 @@ The lexer is responsible for:
 - Emitting Python-style `INDENT` and `DEDENT` layout tokens
 - Tracking line, column, and character index for every token
 
-The lexer is not responsible for:
+The parser is responsible for:
 
-- Validating grammar
-- Building AST nodes
+- Validating MVP grammar
+- Building typed AST nodes
+- Handling indentation-defined statement blocks
+- Handling whitespace-style calls such as `print "hi"`
+- Parsing ranges, pipelines, match statements, class inheritance, and explicit
+  `new`
+
+The emitter is responsible for:
+
+- Emitting modern JavaScript for Bun/ES2023
+- Lowering `print` calls to `console.log`
+- Emitting braces from indentation blocks
+- Converting simple string interpolation to template literals
+- Lowering inclusive ranges through a local helper only when needed
+- Lowering `match` statements to scoped JavaScript control flow
+
+The compiler is not responsible for:
+
 - Resolving names
-- Emitting JavaScript
 - Performing type checks
+- Producing source maps yet
 
 ## Module Boundaries
 
@@ -42,6 +59,15 @@ The lexer is not responsible for:
 `src/lexer.ts`
 : The scanner and indentation engine.
 
+`src/ast.ts`
+: Typed AST node definitions.
+
+`src/parser.ts`
+: Recursive descent parser for MVP Coco syntax.
+
+`src/emitter.ts`
+: JavaScript emitter and `compile` API.
+
 `src/index.ts`
 : Public API exports.
 
@@ -50,17 +76,8 @@ The lexer is not responsible for:
 
 ## Error Model
 
-Lexical errors throw `CocoSyntaxError` with `line`, `column`, and `index`
-properties. The CLI formats these diagnostics with the input filename.
-
-## Future Stages
-
-The parser should consume only tokens. It should not rescan source text.
-
-The AST should follow Babel-style shapes where practical, while staying small
-enough for Coco-specific syntax.
-
-The emitter should target ES2023 and preserve simple output where possible.
+Lexical and parser errors throw `CocoSyntaxError` with `line`, `column`, and
+`index` properties. The CLI formats these diagnostics with the input filename.
 
 ## Runtime Separation
 

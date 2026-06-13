@@ -305,6 +305,24 @@ export class Lexer {
       this.addToken("ARROW", two, two, start);
       return;
     }
+    if (two === "->") {
+      this.advance();
+      this.advance();
+      this.addToken("ARROW", two, two, start);
+      return;
+    }
+    if (two === "..") {
+      this.advance();
+      this.advance();
+      this.addToken("RANGE", two, two, start);
+      return;
+    }
+    if (two === "|>") {
+      this.advance();
+      this.advance();
+      this.addToken("PIPE", two, two, start);
+      return;
+    }
     if (two === "==") {
       this.advance();
       this.advance();

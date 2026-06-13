@@ -1,5 +1,6 @@
 age = 20
 active = true
+users = ["Tom", "Jerry"]
 
 if age >= 18 and active
   print "adult"
@@ -8,8 +9,19 @@ elif age >= 13
 else
   print "child"
 
+for index in 1..3
+  print "index {index}"
+
 for name in users
-  print "user {name}"
+  label = name |> describeUser
+  print label
+
+match age
+  20 -> print "twenty"
+  _ -> print "other age"
 
 while active
   break
+
+fn describeUser name
+  return "user {name}"

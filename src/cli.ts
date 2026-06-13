@@ -1,9 +1,11 @@
 #!/usr/bin/env bun
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { basename } from "node:path";
-import { CocoSyntaxError, tokenize, type Token } from "./index";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { CocoSyntaxError, compile, parse, tokenize, type Token } from "./index";
 
 type ReplMode = "compact" | "json";
 
@@ -24,7 +26,7 @@ if (command === "runtime") {
   process.exit(0);
 }
 
-if (command !== "lex") {
+if (command !== "lex" && command !== "parse" && command !== "compile" && command !== "run") {
   console.error(`Unknown command: ${command}`);
   printHelp();
   process.exit(1);
@@ -38,7 +40,21 @@ if (!file) {
 
 try {
   const source = await readFile(file, "utf8");
-  console.log(formatTokens(tokenize(source, { filename: file }), "json"));
+  if (command === "lex") {
+    console.log(formatTokens(tokenize(source, { filename: file }), "json"));
+  } else if (command === "parse") {
+    console.log(JSON.stringify(parse(source, { filename: file }), null, 2));
+  } else if (command === "compile") {
+    const outputFile = parseOutputFile(rest);
+    const js = compile(source, { filename: file });
+    if (outputFile) {
+      await writeFile(outputFile, js);
+    } else {
+      console.log(js);
+    }
+  } else if (command === "run") {
+    await runCocoFile(source, file);
+  }
 } catch (error) {
   printDiagnostic(error, file);
   process.exit(1);
@@ -210,6 +226,11 @@ function printDiagnostic(error: unknown, file: string): void {
     return;
   }
 
+  if (error instanceof Error) {
+    console.error(`${basename(file)}: ${error.message}`);
+    return;
+  }
+
   throw error;
 }
 
@@ -219,6 +240,10 @@ function printHelp(): void {
 Usage:
   coco                    Start the Coco REPL
   coco lex <file.coco>    Tokenize a .coco file and print JSON tokens
+  coco parse <file.coco>  Parse a .coco file and print AST JSON
+  coco compile <file.coco> [-o output.js]
+                          Compile a .coco file to JavaScript
+  coco run <file.coco>    Compile and execute a .coco file with Bun
   coco runtime <cmd>       Inspect or dry-run a Coco runtime manifest
   cococ lex <file.coco>   Compiler-style alias for coco lex
 
@@ -234,6 +259,40 @@ REPL commands:
   .clear    Clear the current multi-line input buffer
   .exit     Exit the REPL
 `);
+}
+
+function parseOutputFile(args: string[]): string | null {
+  const outputIndex = args.findIndex((arg) => arg === "-o" || arg === "--output");
+  if (outputIndex === -1) {
+    return null;
+  }
+
+  const outputFile = args[outputIndex + 1];
+  if (!outputFile) {
+    throw new Error("Missing output file after -o");
+  }
+
+  return outputFile;
+}
+
+async function runCocoFile(source: string, file: string): Promise<void> {
+  const dir = await mkdtemp(join(tmpdir(), "coco-run-"));
+  const jsFile = join(dir, `${basename(file, ".coco")}.mjs`);
+
+  try {
+    await writeFile(jsFile, compile(source, { filename: file }));
+    const proc = Bun.spawn(["bun", jsFile], {
+      stdout: "inherit",
+      stderr: "inherit",
+      stdin: "inherit",
+    });
+    const exitCode = await proc.exited;
+    if (exitCode !== 0) {
+      process.exit(exitCode);
+    }
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 }
 
 async function runRuntimeCommand(subcommand: string | undefined, args: string[]): Promise<void> {

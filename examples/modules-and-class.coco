@@ -1,8 +1,16 @@
-import defaultClient from "client"
-import { request } from "http"
+import defaultClient, { request } from "client"
 
-export class UserService
+class BaseService
+  fn init client
+    @client = client
+
+export class UserService extends BaseService
+  fn init client
+    @client = client
+
   fn find id
     return request "/users/{id}"
 
+service = new UserService defaultClient
+export { service }
 export default UserService

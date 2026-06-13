@@ -16,8 +16,9 @@ else
   print "Unknown version"
 ```
 
-Coco is early. Today it ships a tested lexer, a REPL, a CLI, examples, docs,
-and an optional runtime planning layer.
+Coco is early, but it now ships a working MVP compiler: lexer, parser, AST,
+JavaScript emitter, CLI commands, examples, docs, tests, and an optional
+runtime planning layer.
 
 ## Try It
 
@@ -66,6 +67,16 @@ Or without installing globally:
 bun run src/cli.ts lex examples/hello.coco
 ```
 
+## Parse, Compile, and Run
+
+```bash
+coco parse examples/hello.coco
+coco compile examples/hello.coco -o hello.js
+coco run examples/hello.coco
+```
+
+Without `-o`, `compile` prints JavaScript to stdout.
+
 ## The Sweet Part
 
 Readable blocks:
@@ -101,6 +112,10 @@ Optional chaining and modern operators:
 ```coco
 avatar = user?.profile?.avatar
 double = (x) => x * 2
+for i in 1..3
+  print i
+
+value |> double |> print
 ```
 
 ## Runtime Preview
@@ -127,9 +142,11 @@ servers, and database drivers are intended to become optional plugins.
 Language core:
 
 ```ts
-import { tokenize } from "coco-lang";
+import { compile, parse, tokenize } from "coco-lang";
 
 const tokens = tokenize('const name = "Coco"\n');
+const ast = parse('print "hi"\n');
+const js = compile('print "hi"\n');
 ```
 
 Runtime layer:
@@ -178,17 +195,34 @@ bun run test:page
 Implemented:
 
 - Lexer 1.0
+- Parser and typed AST for MVP syntax
+- JavaScript emitter/compiler
 - REPL
 - `coco lex`
+- `coco parse`
+- `coco compile`
+- `coco run`
 - `coco runtime inspect/plan/dev --dry-run`
 - Runtime manifest planning, event bus, scheduler, and plugin registry
 - Tests, docs, examples, and a static docs page
 
-Planned:
+Supported compiler syntax:
 
-- Parser
-- AST
-- JavaScript emitter
+- Variables, constants, assignment, expressions, calls, arrays, indentation
+  object literals, optional property access, functions, async/await, returns,
+  `if`/`elif`/`else`, `for in`, `while`, `break`, `continue`, inclusive ranges
+  with `..`, pipeline calls with `|>`, `match` statements with `_` fallback,
+  imports with default plus named bindings, named exports, classes, `extends`,
+  `new`, methods, and string interpolation for simple expressions
+
+Partial or planned:
+
+- Exceptions, type annotations, generics, decorators, source maps, and a type
+  checker
+- `match` currently supports statement form only and requires a wildcard `_`
+  case
+- Pipeline currently supports `value |> fnName` and `value |> fnName arg`
+- Range syntax is currently inclusive: `1..3` emits values `1, 2, 3`
 - Real runtime adapters
 
 ## License

@@ -5,38 +5,58 @@
 - Bun + TypeScript project scaffold
 - Coco Lexer 1.0
 - CLI command for lexing `.coco` files
-- Tests for literals, comments, indentation, strings, and operators
+- Typed AST definitions
+- Recursive descent parser for MVP syntax
+- JavaScript emitter targeting modern Bun/ES2023
+- CLI commands for `parse`, `compile`, and `run`
+- Tests for lexer, parser, emitter, compiler CLI, and runtime CLI behavior
 - Docs, tutorial, example, and static project page
 
-## MVP Compiler Scope
+## MVP Compiler Scope Implemented
 
-The first full compiler should implement:
+The current compiler implements:
 
-- Variables and constants
-- Functions and explicit `return`
+- Variables, constants, and assignment
+- Expressions with precedence, unary operators, binary operators, and logical
+  operators
+- Numbers, strings, simple string interpolation, booleans, and null
+- Arrays and indentation object literals
+- Property access and optional chaining
+- Functions, explicit `return`, and implicit return for final function
+  expression statements
+- Calls with parentheses and whitespace call syntax
 - `if`, `elif`, and `else`
 - `for in`
-- Classes and methods
-- `import` and `export`
+- Inclusive ranges with `..`
+- `while`, `break`, and `continue`
 - `async` and `await`
-- String interpolation
-- Optional chaining
-- Pipeline operator
+- Pipeline expressions for simple call chains
+- `match` statements with wildcard fallback
+- Basic `import` and `export`, including default+named imports and named exports
+- Classes, methods, `extends`, and explicit `new`
 
-## Non-Goals for MVP
+## Partial or Future Features
 
-- `match`
+- Exceptions
 - Generics
 - JSX
 - Macro system
 - Decorators
-- Type checker
+- Type annotations and type checking
+- Full class semantics beyond `extends`, `init`, and explicit `new`
+- Bare construction sugar such as `User "Tom"` becoming `new User("Tom")`
+- Source maps
 
-## Suggested Stage Order
+## Runtime Scope
 
-1. Parser for expressions and simple statements
-2. Parser for blocks, functions, and conditions
-3. AST normalization and fixture snapshots
-4. JavaScript emitter for MVP syntax
-5. CLI `compile` command
-6. Source maps and formatter-friendly output
+The runtime planning layer remains separate from the language compiler. Runtime
+manifest parsing, planning, dry-run events, scheduler, and plugin registry are
+implemented; real runtime adapters remain future work.
+
+## Next Compiler Stages
+
+1. Source maps and formatter-friendly output
+2. `match` expressions and broader pattern support
+3. Broader class semantics
+4. Type annotations and TypeScript-oriented emit
+5. Real runtime adapters

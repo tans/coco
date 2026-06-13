@@ -12,6 +12,9 @@ Global command smoke check:
 bun run install:global
 PATH="$HOME/.bun/bin:$PATH" printf '.exit\n' | coco
 PATH="$HOME/.bun/bin:$PATH" coco lex examples/hello.coco
+PATH="$HOME/.bun/bin:$PATH" coco parse examples/hello.coco
+PATH="$HOME/.bun/bin:$PATH" coco compile examples/hello.coco
+PATH="$HOME/.bun/bin:$PATH" coco run examples/hello.coco
 ```
 
 The static page smoke test expects the page to be served and uses the system
@@ -56,6 +59,18 @@ COCO_PAGE_URL=http://127.0.0.1:4173 bun run test:page
 - `coco runtime plan`
 - `coco runtime dev --dry-run`
 
+`tests/parser.test.ts`, `tests/emitter.test.ts`, and `tests/cli.test.ts`
+cover:
+
+- AST generation for functions, conditions, collections, modules, classes,
+  ranges, pipelines, constructors, and `match`
+- JavaScript emit for variables, functions, interpolation, collections,
+  optional chaining, async/await, arrows, ranges, pipelines, `match`, class
+  inheritance, and richer module syntax
+- `coco parse`
+- `coco compile`
+- `coco run`
+
 ## Adding Tests
 
 Add tests when:
@@ -64,7 +79,8 @@ Add tests when:
 - A token value or lexeme rule changes
 - A diagnostic is added or changed
 - Indentation behavior changes
-- A future parser consumes a previously ambiguous token sequence
+- The parser consumes a previously ambiguous token sequence
+- JavaScript output changes for a supported language feature
 
 Prefer testing token `type` sequences for layout behavior and full token objects
 when source locations or literal values matter.

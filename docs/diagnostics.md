@@ -1,6 +1,6 @@
 # Diagnostics
 
-Lexer diagnostics throw `CocoSyntaxError`.
+Lexer and parser diagnostics throw `CocoSyntaxError`.
 
 The error contains:
 
@@ -44,7 +44,25 @@ Unexpected character:
 price = $10
 ```
 
+Parser errors:
+
+```coco
+fn add a b
+return a + b
+```
+
+The function body is missing its required indentation block.
+
+Unsupported or incomplete forms are also diagnosed clearly. Example:
+
+```coco
+match value
+  1 -> "one"
+```
+
+This currently reports that a wildcard `_` case is required.
+
 ## Design Rule
 
-Lexer diagnostics should only report lexical problems. Grammar errors belong
-to the parser stage.
+Lexer diagnostics should only report lexical problems. Grammar errors are
+reported by the parser with the same `CocoSyntaxError` shape.

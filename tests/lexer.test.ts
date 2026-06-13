@@ -151,7 +151,7 @@ describe("Coco Lexer 1.0", () => {
   });
 
   test("recognizes operators and punctuation", () => {
-    expect(types("a == b && c != d || e >= 1 => f?.g\n")).toEqual([
+    expect(types("a == b && c != d || e >= 1 => f?.g 1..3 |> print 1 -> one\n")).toEqual([
       "IDENTIFIER",
       "EQ",
       "IDENTIFIER",
@@ -167,6 +167,14 @@ describe("Coco Lexer 1.0", () => {
       "IDENTIFIER",
       "QUESTION",
       "DOT",
+      "IDENTIFIER",
+      "NUMBER",
+      "RANGE",
+      "NUMBER",
+      "PIPE",
+      "IDENTIFIER",
+      "NUMBER",
+      "ARROW",
       "IDENTIFIER",
       "NEWLINE",
       "EOF",

@@ -1,9 +1,12 @@
 # Examples
 
-Run any example through the lexer:
+Run any example through the compiler:
 
 ```bash
 bun run src/cli.ts lex examples/hello.coco
+bun run src/cli.ts parse examples/hello.coco
+bun run src/cli.ts compile examples/hello.coco
+bun run src/cli.ts run examples/hello.coco
 ```
 
 ## Hello
@@ -27,6 +30,7 @@ else
 File: `examples/control-flow.coco`
 
 Shows `if`, `elif`, `else`, `for in`, `while`, word operators, and `break`.
+It also demonstrates inclusive ranges, simple pipelines, and `match`.
 
 ## Collections
 
@@ -46,8 +50,11 @@ function syntax.
 
 File: `examples/modules-and-class.coco`
 
-Shows import/export keywords, class declarations, methods, and string
-interpolation in paths.
+Shows combined default+named imports, class inheritance, `init` to
+`constructor`, explicit `new`, named export lists, and default export.
+
+This example compiles to JavaScript module syntax. Running it requires the
+referenced `"client"` and `"http"` modules to exist in the runtime environment.
 
 ## Diagnostics
 

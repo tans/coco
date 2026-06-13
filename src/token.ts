@@ -20,6 +20,7 @@ export type TokenType =
   | "COMMA"
   | "COLON"
   | "DOT"
+  | "RANGE"
   | "ASSIGN"
   | "PLUS"
   | "MINUS"
@@ -78,16 +79,19 @@ export const keywords = new Set([
   "elif",
   "else",
   "match",
+  "new",
   "for",
   "in",
   "while",
   "break",
   "continue",
   "class",
+  "extends",
   "try",
   "catch",
   "finally",
   "import",
+  "from",
   "export",
   "default",
 ]);
